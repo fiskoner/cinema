@@ -15,13 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+   path('admin/', admin.site.urls),
+   path('api/v1/auth/', include('authorization.urls')),
 ]
 
 
@@ -35,10 +36,10 @@ schema_view_v1 = get_schema_view(
       license=openapi.License(name="BSD License"),
    ),
    public=True,
-   permission_classes=[permissions.AllowAny],
+   permission_classes=(permissions.AllowAny,),
 )
 
-urlpatterns = [
+urlpatterns += [
    url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view_v1.without_ui(cache_timeout=0), name='schema-json'),
    url(r'^swagger/$', schema_view_v1.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
