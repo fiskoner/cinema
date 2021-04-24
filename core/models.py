@@ -8,6 +8,7 @@ class User(AbstractUser):
     class UserTypeChoices(models.TextChoices):
         user = 'User', 'Пользователь'
         admin = 'Admin', 'Администратор'
+        director = ''
 
     class GenderChoices(models.TextChoices):
         male = 'Male', 'Мужчина'

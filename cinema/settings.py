@@ -42,7 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'drf_yasg',
-    'corsheaders'
+    'corsheaders',
+    'core',
+    'authorization',
+    'movies'
 ]
 
 MIDDLEWARE = [
@@ -112,6 +115,21 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'core.User'
+
+SWAGGER_SETTINGS = {
+    'PERSIST_AUTH': True,
+    'SECURITY_DEFINITIONS': {
+        'Basic': {
+            'type': 'basic'
+        },
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
