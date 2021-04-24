@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'core',
     'authorization',
-    'movies'
+    'movies',
+    'directory'
 ]
 
 MIDDLEWARE = [
