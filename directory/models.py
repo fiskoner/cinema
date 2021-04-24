@@ -1,11 +1,11 @@
 from django.db import models
-from directory import mixins
 
 # Create your models here.
+from directory.mixins import models_mixins
 from movies.models import Movie
 
 
-class Actor(mixins.PersonDescription):
+class Actor(models_mixins.PersonDescription):
     movies = models.ManyToManyField(Movie, through='directory.ActorMovie', related_name='actor')
 
 
@@ -15,7 +15,7 @@ class ActorMovie(models.Model):
     role = models.CharField(max_length=255, default='', blank=True)
 
 
-class MovieDirector(mixins.PersonDescription):
+class MovieDirector(models_mixins.PersonDescription):
     movies = models.ManyToManyField(Movie, related_name='directors')
 
 
