@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.utils import timezone
 
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, status, exceptions
@@ -6,6 +7,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import mixins
+from rest_framework import permissions as rest_permissions
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from authorization import serializers
@@ -16,6 +18,7 @@ class UserInfoViewSet(GenericViewSet,
                       mixins.RetrieveModelMixin):
     queryset = User.objects.all()
     serializer_class = serializers.UserInfoSerializer
+    permission_classes = (rest_permissions.IsAuthenticated,)
 
     def get_object(self):
         return self.request.user
@@ -40,6 +43,7 @@ class UserLoginView(GenericAPIView):
         if not user.check_password(password):
             raise exceptions.PermissionDenied(detail='Wrong password')
         token, _ = Token.objects.get_or_create(user=user)
+        user.last_login = timezone.now()
         return Response({'Token': f'{token}'}, status=status.HTTP_200_OK)
 
 

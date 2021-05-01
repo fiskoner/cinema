@@ -9,26 +9,25 @@ class UserLoginSerializer(serializers.Serializer):
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
-        exclude = ('password',)
+        exclude = ('password', 'groups', 'user_permissions')
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = '__all__'
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password_confirm = serializers.CharField(required=True)
+    password_confirm = serializers.CharField(required=True, write_only=True)
+    password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
         fields = ('password', 'password_confirm', 'username', 'first_name', 'last_name', 'email', 'phone',
-                  'description', 'date_birth', 'user_type', )
+                  'description', 'date_birth', 'user_type',)
 
     def validate(self, attrs):
         password = attrs.get('password')
