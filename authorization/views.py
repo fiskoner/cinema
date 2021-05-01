@@ -37,13 +37,13 @@ class UserLoginView(GenericAPIView):
             raise exceptions.NotFound('User not found')
         user = user.first()
         password = data.get('password')
-        if not user.check_password('password'):
+        if not user.check_password(password):
             raise exceptions.PermissionDenied(detail='Wrong password')
         token, _ = Token.objects.get_or_create(user=user)
         return Response({'Token': f'{token}'}, status=status.HTTP_200_OK)
 
 
-class UserRegistrationView(ModelViewSet):
+class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = (permissions.AllowAny,)
