@@ -31,10 +31,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def validate_user_type(self, value):
         user = self.context.get('request').user
-        if not user.is_anonymous and user.is_director:
-            if user.is_admin and value == User.UserTypeChoices.director:
-                raise exceptions.ValidationError('You cannot create director user')
-            return value
+        if not user.is_anonymous:
+            if user.is_director:
+                return User.UserTypeChoices.admin
+            if user.is_admin:
+                raise exceptions.ValidationError('You cannot create users')
         return User.UserTypeChoices.user
 
     def validate(self, attrs):
