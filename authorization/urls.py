@@ -7,7 +7,7 @@ app_name = 'authorization'
 
 router = routers.SimpleRouter()
 
-router.register('user', views.UserRegistrationView)
+router.register('user', views.UserViewSet)
 
 urlpatterns = [
     path('login/', views.UserLoginView.as_view()),

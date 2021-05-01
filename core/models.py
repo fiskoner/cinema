@@ -8,7 +8,7 @@ class User(AbstractUser):
     class UserTypeChoices(models.TextChoices):
         user = 'User', 'Пользователь'
         admin = 'Admin', 'Администратор'
-        director = ''
+        director = 'Director', 'Директор'
 
     class GenderChoices(models.TextChoices):
         male = 'Male', 'Мужчина'
@@ -21,4 +21,3 @@ class User(AbstractUser):
     description = models.TextField(default='', blank=True, verbose_name='Описание')
     date_birth = models.DateField(null=True, blank=True, verbose_name='День рождения')
     discount = models.FloatField(null=True, verbose_name='Скидка')
-    children_count = models.IntegerField(null=True, verbose_name='Количество детей')
