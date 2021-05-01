@@ -62,6 +62,5 @@ class UserViewSet(ModelViewSet):
     def get_permissions(self):
         user = self.request.user
         if user.is_anonymous and self.action in ['create']:
-            print('123')
             self.permission_classes = [rest_permissions.AllowAny]
         return super().get_permissions()
