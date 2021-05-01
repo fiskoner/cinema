@@ -16,8 +16,3 @@ class IsAdminPermission(permissions.BasePermission):
 class IsDirectorPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.user_type == User.UserTypeChoices.director
-
-
-class IsStaffPermission(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return request.user.is_staff

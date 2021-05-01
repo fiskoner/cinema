@@ -29,6 +29,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         fields = ('password', 'password_confirm', 'username', 'first_name', 'last_name', 'email', 'phone',
                   'description', 'date_birth', 'user_type',)
 
+    def validate_user_type(self, value):
+        user = self.context.get('request').user
+        if not user.is_anonymous and user.is_director:
+            return value
+        return User.UserTypeChoices.user
+
     def validate(self, attrs):
         password = attrs.get('password')
         password_confirm = attrs.pop('password_confirm')
@@ -38,7 +44,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         password = validated_data.pop('password')
-        user = User(**validated_data)
+        user_type = validated_data.get('user_type')
+        is_staff = user_type in [User.UserTypeChoices.admin, User.UserTypeChoices.director]
+        user = User(**validated_data, is_staff=is_staff)
         user.set_password(password)
         user.save()
         return user

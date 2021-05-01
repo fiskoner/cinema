@@ -21,3 +21,15 @@ class User(AbstractUser):
     description = models.TextField(default='', blank=True, verbose_name='Описание')
     date_birth = models.DateField(null=True, blank=True, verbose_name='День рождения')
     discount = models.FloatField(null=True, verbose_name='Скидка')
+
+    @property
+    def is_user(self):
+        return self.user_type == self.UserTypeChoices.user
+
+    @property
+    def is_admin(self):
+        return self.user_type == self.UserTypeChoices.admin
+
+    @property
+    def is_director(self):
+        return self.user_type == self.UserTypeChoices.director
