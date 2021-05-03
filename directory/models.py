@@ -13,6 +13,15 @@ class Actor(models_mixins.PersonDescription):
         verbose_name_plural = 'Актёры'
 
 
+class ActorPhoto(models.Model):
+
+    def get_images_upload_path(self, filename):
+        return f'actors/{self.actor.name}/{filename}'
+
+    actor = models.ForeignKey(Actor, on_delete=models.CASCADE, related_name='photos')
+    image = models.FileField(upload_to=get_images_upload_path)
+
+
 class ActorMovie(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='actors')
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
@@ -29,6 +38,15 @@ class MovieDirector(models_mixins.PersonDescription):
     class Meta:
         verbose_name = 'Режиссер'
         verbose_name_plural = 'Режиссеры'
+
+
+class MovieDirectorPhoto(models.Model):
+
+    def get_images_upload_path(self, filename):
+        return f'movies_directors/{self.movie_director.name}/{filename}'
+
+    movie_director = models.ForeignKey(MovieDirector, on_delete=models.CASCADE, related_name='photos')
+    image = models.FileField(upload_to=get_images_upload_path)
 
 
 class MovieGenre(models.Model):

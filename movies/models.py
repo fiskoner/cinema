@@ -3,10 +3,6 @@ from django.db import models
 # Create your models here.
 
 
-def get_images_upload_path(instance, filename):
-    return f'movies/{instance.movie.release_date}/{instance.movie.name}/{filename}'
-
-
 class Movie(models.Model):
     name = models.CharField(max_length=255, default='', blank=True, verbose_name='Название фильма')
     description = models.TextField(blank=True, default='', verbose_name='Описание фильма')
@@ -19,5 +15,9 @@ class Movie(models.Model):
 
 
 class MoviePhoto(models.Model):
+
+    def get_images_upload_path(self, filename):
+        return f'movies/{self.movie.name}/{filename}'
+
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='photos')
     image = models.FileField(upload_to=get_images_upload_path)
