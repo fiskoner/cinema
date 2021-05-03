@@ -3,11 +3,11 @@ from rest_framework.decorators import action
 from rest_framework import permissions as rest_permissions, status, parsers
 from rest_framework.response import Response
 
-from core.mixins.view_mixins import StaffEditPermissionViewSet
+from core.mixins.view_mixins import StaffEditPermissionViewSetMixin
 from movies import serializers, models
 
 
-class MovieViewSet(StaffEditPermissionViewSet):
+class MovieViewSet(StaffEditPermissionViewSetMixin):
     queryset = models.Movie.objects.all()
     serializer_class = serializers.MovieSerializer
     permission_classes = (rest_permissions.IsAuthenticated, rest_permissions.IsAdminUser, )
@@ -23,7 +23,7 @@ class MovieViewSet(StaffEditPermissionViewSet):
         files = request.FILES.getlist('file')
         movie = self.get_object()
         bulk = [models.MoviePhoto(image=file, movie=movie) for file in files]
-        files = models.MoviePhoto.objects.bulk_create(objs=bulk)
-        serializer = self.serializer_class(files, many=True, context=self.get_serializer_context())
+        models.MoviePhoto.objects.bulk_create(objs=bulk)
+        serializer = self.serializer_class(movie)
         data = serializer.data
         return Response({'status': 'success', 'data': data}, status=status.HTTP_200_OK)
