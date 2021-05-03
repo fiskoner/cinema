@@ -23,7 +23,7 @@ class MovieViewSet(StaffEditPermissionViewSet):
         files = request.FILES.getlist('file')
         movie = self.get_object()
         bulk = [models.MoviePhoto(image=file, movie=movie) for file in files]
-        files = models.MoviePhoto.objects.bulk_create(objs=bulk)
-        serializer = self.serializer_class(files, many=True, context=self.get_serializer_context())
+        models.MoviePhoto.objects.bulk_create(objs=bulk)
+        serializer = self.serializer_class(movie)
         data = serializer.data
         return Response({'status': 'success', 'data': data}, status=status.HTTP_200_OK)
