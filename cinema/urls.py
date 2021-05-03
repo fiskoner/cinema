@@ -23,7 +23,8 @@ from rest_framework import permissions
 urlpatterns = [
    path('admin/', admin.site.urls),
    path('api/v1/auth/', include('authorization.urls')),
-   path('api/v1/directory/', include('directory.urls'))
+   path('api/v1/directory/', include('directory.urls')),
+   path('api/v1/movies/', include('movies.urls'))
 ]
 
 
