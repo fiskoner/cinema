@@ -29,16 +29,17 @@ SECRET_KEY = 'django-insecure-0uv1r-rwr1)=84j7o0-x(r2nttb%25xqakgae58_)k)j9!3kk0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = '*'
+# ALLOWED_HOSTS = '*'
 CORS_ALLOW_ALL_ORIGINS = False
-CORS_ORIGIN_WHITELIST = [
-    'http://45.128.190.208',
-]
+# CORS_ORIGIN_WHITELIST = [
+#     'http://45.128.190.208',
+# ]
 
 ALLOWED_HOSTS = [
     '176.241.128.40',
     '192.168.0.104',
-    '127.0.0.1'
+    '127.0.0.1',
+    '0.0.0.0'
 ]
 
 # Application definition
@@ -97,27 +98,17 @@ WSGI_APPLICATION = 'cinema.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': os.environ.get('MYSQL_DATABASE'),
-#         'USER': os.environ.get('MYSQL_USER'),
-#         'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
-#         'HOST': os.environ.get('MYSQL_HOST'),
-#         'PORT': os.environ.get('MYSQL_PORT')
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cinema',
-        'USER': 'artemiy',
-        'PASSWORD': 'fisk1',
-        'HOST': 'db',
-        'PORT': '3306'
+        'NAME': os.environ.get('MYSQL_DATABASE'),
+        'USER': os.environ.get('MYSQL_USER'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
+        'HOST': os.environ.get('MYSQL_HOST'),
+        'PORT': os.environ.get('MYSQL_PORT')
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

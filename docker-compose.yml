@@ -5,20 +5,15 @@ services:
     image: mysql:5.7
     command: --default-authentication-plugin=mysql_native_password
     ports:
-      - '3306:3306'
-    environment:
-      MYSQL_DATABASE: cinema
-      MYSQL_USER: artemiy
-      MYSQL_PASSWORD: fisk1
-      MYSQL_HOST: localhost
-      MYSQL_PORT: 3306
-      MYSQL_ROOT_PASSWORD: 1fisk
+      - '3307:3307'
+    env_file:
+      - .env
   web:
     build: .
-    command: sh -c 'python manage.py migrate && python manage.py runserver 0.0.0.0:8000'
+    command: sh -c 'python manage.py migrate && python manage.py runserver 0.0.0.0:8040 --noreload'
     volumes:
       - .:/cinema
     ports:
-      - "8000:8003"
+      - "8040:8040"
     depends_on:
       - 'db'
