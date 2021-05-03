@@ -3,11 +3,11 @@ from rest_framework.decorators import action
 from rest_framework import permissions as rest_permissions, status, parsers
 from rest_framework.response import Response
 
-from core.mixins.view_mixins import StaffEditPermissionViewSet
+from core.mixins.view_mixins import StaffEditPermissionViewSetMixin
 from movies import serializers, models
 
 
-class MovieViewSet(StaffEditPermissionViewSet):
+class MovieViewSet(StaffEditPermissionViewSetMixin):
     queryset = models.Movie.objects.all()
     serializer_class = serializers.MovieSerializer
     permission_classes = (rest_permissions.IsAuthenticated, rest_permissions.IsAdminUser, )

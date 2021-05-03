@@ -2,7 +2,16 @@ from rest_framework import serializers
 from directory import models
 
 
+class ActorPhotoUploadSerializer(serializers.ModelSerializer):
+    file = serializers.FileField(source='image')
+
+    class Meta:
+        model = models.ActorPhoto
+        fields = ('file', )
+
+
 class ActorSerializer(serializers.ModelSerializer):
+    photos = ActorPhotoUploadSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Actor
@@ -16,7 +25,16 @@ class ActorMovieSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class MovieDirectorPhotoUploadSerializer(serializers.ModelSerializer):
+    file = serializers.FileField(source='image')
+
+    class Meta:
+        model = models.MovieDirectorPhoto
+        fields = ('file',)
+
+
 class MovieDirectorSerializer(serializers.ModelSerializer):
+    photos = MovieDirectorPhotoUploadSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.MovieDirector

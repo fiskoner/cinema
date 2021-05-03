@@ -12,7 +12,7 @@ class MoviePhotoUploadSerializer(serializers.ModelSerializer):
 
 
 class MovieSerializer(serializers.ModelSerializer):
-    photos = MoviePhotoUploadSerializer(many=True)
+    photos = MoviePhotoUploadSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Movie
