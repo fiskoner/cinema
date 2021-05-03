@@ -22,6 +22,10 @@ class User(AbstractUser):
     date_birth = models.DateField(null=True, blank=True, verbose_name='День рождения')
     discount = models.FloatField(null=True, verbose_name='Скидка')
 
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
     @property
     def is_user(self):
         return self.user_type == self.UserTypeChoices.user
