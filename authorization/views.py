@@ -12,7 +12,7 @@ from rest_framework import permissions as rest_permissions
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from authorization import serializers
-from core import permissions
+from core import permissions, pagination
 from core.models import User
 
 
@@ -53,6 +53,7 @@ class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = (rest_permissions.IsAuthenticated,)
+    pagination_class = pagination.CustomPagination
 
     def get_serializer_class(self):
         if self.action in ['create']:

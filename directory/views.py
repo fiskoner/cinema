@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from core import permissions
+from core import permissions, pagination
 from core.mixins import view_mixins
 from directory import serializers, models
 
@@ -13,6 +13,7 @@ class ActorViewSet(view_mixins.StaffEditPermissionViewSetMixin, view_mixins.File
     queryset = models.Actor.objects.all()
     serializer_class = serializers.ActorSerializer
     permission_classes = (rest_framework.permissions.IsAuthenticated, rest_framework.permissions.IsAdminUser)
+    pagination_class = pagination.CustomPagination
 
     @action(methods=['post'], detail=True)
     @swagger_auto_schema(request_body=serializers.ActorPhotoUploadSerializer)
@@ -30,12 +31,14 @@ class ActorMovieViewSet(view_mixins.StaffEditPermissionViewSetMixin):
     queryset = models.ActorMovie.objects.all()
     serializer_class = serializers.ActorMovieSerializer
     permission_classes = (rest_framework.permissions.IsAuthenticated, rest_framework.permissions.IsAdminUser)
+    pagination_class = pagination.CustomPagination
 
 
 class MovieDirectorViewSet(view_mixins.StaffEditPermissionViewSetMixin, view_mixins.FileParserViewSetMixin):
     queryset = models.MovieDirector.objects.all()
     serializer_class = serializers.MovieDirectorSerializer
     permission_classes = (rest_framework.permissions.IsAuthenticated, rest_framework.permissions.IsAdminUser)
+    pagination_class = pagination.CustomPagination
 
     @action(methods=['post'], detail=True)
     @swagger_auto_schema(request_body=serializers.ActorPhotoUploadSerializer)
@@ -53,9 +56,11 @@ class MovieGenreViewSet(view_mixins.StaffEditPermissionViewSetMixin):
     queryset = models.MovieGenre.objects.all()
     serializer_class = serializers.MovieGenreSerializer
     permission_classes = (rest_framework.permissions.IsAuthenticated, rest_framework.permissions.IsAdminUser)
+    pagination_class = pagination.CustomPagination
 
 
 class CountryViewSet(view_mixins.StaffEditPermissionViewSetMixin):
     queryset = models.Country.objects.all()
     serializer_class = serializers.CountrySerializer
     permission_classes = (rest_framework.permissions.IsAuthenticated, rest_framework.permissions.IsAdminUser)
+    pagination_class = pagination.CustomPagination
