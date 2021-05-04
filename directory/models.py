@@ -7,6 +7,7 @@ from movies.models import Movie
 
 class Actor(models_mixins.PersonDescription):
     movies = models.ManyToManyField(Movie, through='directory.ActorMovie', related_name='actor')
+    country = models.ForeignKey('directory.Country', on_delete=models.SET_NULL, null=True, related_name='actors')
 
     class Meta:
         verbose_name = 'Актёр'
@@ -34,6 +35,9 @@ class ActorMovie(models.Model):
 
 class MovieDirector(models_mixins.PersonDescription):
     movies = models.ManyToManyField(Movie, related_name='directors')
+    country = models.ForeignKey(
+        'directory.Country', on_delete=models.SET_NULL, null=True, related_name='movie_directors'
+    )
 
     class Meta:
         verbose_name = 'Режиссер'
