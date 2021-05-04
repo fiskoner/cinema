@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from directory import models
+from directory.models import Country
 
 
 class ActorPhotoUploadSerializer(serializers.ModelSerializer):
@@ -12,6 +13,7 @@ class ActorPhotoUploadSerializer(serializers.ModelSerializer):
 
 class ActorSerializer(serializers.ModelSerializer):
     photos = ActorPhotoUploadSerializer(many=True, read_only=True)
+    country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.all(), required=False)
 
     class Meta:
         model = models.Actor
@@ -35,6 +37,7 @@ class MovieDirectorPhotoUploadSerializer(serializers.ModelSerializer):
 
 class MovieDirectorSerializer(serializers.ModelSerializer):
     photos = MovieDirectorPhotoUploadSerializer(many=True, read_only=True)
+    country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.all(), required=False)
 
     class Meta:
         model = models.MovieDirector

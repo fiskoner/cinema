@@ -8,6 +8,7 @@ class Movie(models.Model):
     description = models.TextField(blank=True, default='', verbose_name='Описание фильма')
     release_date = models.DateField(null=True)
     duration = models.DurationField(null=True)
+    countries = models.ManyToManyField('directory.Country', related_name='movies')
 
     class Meta:
         verbose_name = 'Кино'
