@@ -53,3 +53,9 @@ class MovieGenreViewSet(view_mixins.StaffEditPermissionViewSetMixin):
     queryset = models.MovieGenre.objects.all()
     serializer_class = serializers.MovieGenreSerializer
     permission_classes = (rest_framework.permissions.IsAuthenticated, rest_framework.permissions.IsAdminUser)
+
+
+class CountryViewSet(view_mixins.StaffEditPermissionViewSetMixin):
+    queryset = models.Country.objects.all()
+    serializer_class = serializers.CountrySerializer
+    permission_classes = (rest_framework.permissions.IsAuthenticated, rest_framework.permissions.IsAdminUser)

@@ -11,6 +11,14 @@ services:
       - '3307:3307'
     env_file:
       - .env
+  redis:
+    image: 'redis:alpine'
+    restart: always
+    command: redis-server --port 6380
+    ports:
+      - '6380:6380'
+    expose:
+      - '6380'
   web:
     build: .
     command: sh -c 'python manage.py migrate && python manage.py runserver 0.0.0.0:8040 --noreload'
@@ -21,3 +29,16 @@ services:
       - "8040:8040"
     depends_on:
       - 'db'
+      - 'redis'
+  celery:
+    build: .
+    environment:
+      - C_FORCE_ROOT=true
+    command: celery worker -A cinema -l INFO
+    volumes:
+      - .:/cinema
+    links:
+      - redis
+    depends_on:
+      - 'web'
+      - 'redis'

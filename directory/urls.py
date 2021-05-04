@@ -10,6 +10,7 @@ router.register('actor', views.ActorViewSet)
 router.register('actor_movies', views.ActorMovieViewSet)
 router.register('movie_director', views.MovieDirectorViewSet)
 router.register('movie_genre', views.MovieGenreViewSet)
+router.register('country', views.CountryViewSet)
 
 urlpatterns = []
 
