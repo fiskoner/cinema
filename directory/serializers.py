@@ -3,6 +3,13 @@ from directory import models
 from directory.models import Country
 
 
+class CountrySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Country
+        fields = '__all__'
+
+
 class ActorPhotoUploadSerializer(serializers.ModelSerializer):
     file = serializers.FileField(source='image')
 
@@ -13,7 +20,7 @@ class ActorPhotoUploadSerializer(serializers.ModelSerializer):
 
 class ActorSerializer(serializers.ModelSerializer):
     photos = ActorPhotoUploadSerializer(many=True, read_only=True)
-    country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.all(), required=False)
+    country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.all(), required=False, write_only=False)
 
     class Meta:
         model = models.Actor
@@ -49,3 +56,6 @@ class MovieGenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.MovieGenre
         fields = '__all__'
+
+
+
