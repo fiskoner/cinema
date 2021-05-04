@@ -1,6 +1,8 @@
 from django.db import models
 
 # Create your models here.
+from rest_framework import exceptions
+
 from directory.mixins import models_mixins
 from movies.models import Movie
 
@@ -13,6 +15,9 @@ class Actor(models_mixins.PersonDescription):
         verbose_name = 'Актёр'
         verbose_name_plural = 'Актёры'
 
+    def __str__(self):
+        return self.name
+
 
 class ActorPhoto(models.Model):
 
@@ -21,6 +26,10 @@ class ActorPhoto(models.Model):
 
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE, related_name='photos')
     image = models.FileField(upload_to=get_images_upload_path)
+    is_title = models.BooleanField(null=True, unique=True)  # SHIT CODE BUT ITS WORKING
+
+    def __str__(self):
+        return self.actor.name
 
 
 class ActorMovie(models.Model):
@@ -31,6 +40,9 @@ class ActorMovie(models.Model):
     class Meta:
         verbose_name = 'Актёр в кино'
         verbose_name_plural = 'Актёры в кино'
+
+    def __str__(self):
+        return f'{self.movie}, {self.actor} - роль "{self.role}"'
 
 
 class MovieDirector(models_mixins.PersonDescription):
@@ -43,6 +55,9 @@ class MovieDirector(models_mixins.PersonDescription):
         verbose_name = 'Режиссер'
         verbose_name_plural = 'Режиссеры'
 
+    def __str__(self):
+        return f'{self.movies.name} {self.name}'
+
 
 class MovieDirectorPhoto(models.Model):
 
@@ -51,6 +66,10 @@ class MovieDirectorPhoto(models.Model):
 
     movie_director = models.ForeignKey(MovieDirector, on_delete=models.CASCADE, related_name='photos')
     image = models.FileField(upload_to=get_images_upload_path)
+    is_title = models.BooleanField(null=True, unique=True)  # SHIT CODE BUT ITS WORKING
+
+    def __str__(self):
+        return self.movie_director.name
 
 
 class MovieGenre(models.Model):
@@ -60,6 +79,12 @@ class MovieGenre(models.Model):
         verbose_name = 'Жанр кино'
         verbose_name_plural = 'Жанры кино'
 
+    def __str__(self):
+        return self.name
+
 
 class Country(models.Model):
     name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
