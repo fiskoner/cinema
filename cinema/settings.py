@@ -107,7 +107,8 @@ DATABASES = {
         'USER': os.environ.get('MYSQL_USER'),
         'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
         'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('MYSQL_PORT')
+        'PORT': os.environ.get('MYSQL_PORT'),
+        'OPTIONS': {'charset': 'utf8mb4'}
     }
 }
 
@@ -155,11 +156,8 @@ REST_FRAMEWORK = {
     ]
 }
 
-# CELERY_BROKER_URL = 'redis://redis:6380/1'
-# CELERY_RESULT_BACKEND = 'redis://redis:6380/1'
-
-CELERY_BROKER_URL = 'redis://localhost:6379/1'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
+CELERY_BROKER_URL = os.environ.get('CELERY_HOST')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_BACKEND')
 
 CELERY_ACCEPT_CONTENT = ['application/json', 'pickle']
 CELERY_RESULT_SERIALIZER = 'json'
