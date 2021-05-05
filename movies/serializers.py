@@ -9,7 +9,7 @@ class MoviePhotoUploadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.MoviePhoto
-        fields = ('file',)
+        fields = ('file', 'is_title')
 
 
 class MovieSerializer(serializers.ModelSerializer):
