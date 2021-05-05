@@ -9,6 +9,7 @@ class Movie(models.Model):
     release_date = models.DateField(null=True)
     duration = models.DurationField(null=True)
     countries = models.ManyToManyField('directory.Country', related_name='movies')
+    genres = models.ManyToManyField('directory.MovieGenre', related_name='movies')
 
     class Meta:
         verbose_name = 'Кино'

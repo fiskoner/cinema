@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from core import pagination
 from core.mixins.view_mixins import StaffEditPermissionViewSetMixin
-from movies import serializers, models
+from movies import serializers, models, filters
 
 
 class MovieViewSet(StaffEditPermissionViewSetMixin):
@@ -13,6 +13,12 @@ class MovieViewSet(StaffEditPermissionViewSetMixin):
     serializer_class = serializers.MovieSerializer
     permission_classes = (rest_permissions.IsAuthenticated, rest_permissions.IsAdminUser, )
     pagination_class = pagination.CustomPagination
+    filterset_class = filters.MovieFilter
+
+    def get_serializer_class(self):
+        if self.action in ['retrieve']:
+            return serializers.MovieDetailSerializer
+        return self.serializer_class
 
     def get_parsers(self):
         if self.name == 'Upload images':

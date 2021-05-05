@@ -40,6 +40,7 @@ class ActorMovie(models.Model):
     class Meta:
         verbose_name = 'Актёр в кино'
         verbose_name_plural = 'Актёры в кино'
+        unique_together = ('movie', 'actor')
 
     def __str__(self):
         return f'{self.movie}, {self.actor} - роль "{self.role}"'
@@ -56,7 +57,7 @@ class MovieDirector(models_mixins.PersonDescription):
         verbose_name_plural = 'Режиссеры'
 
     def __str__(self):
-        return f'{self.movies.name} {self.name}'
+        return f'{self.name}'
 
 
 class MovieDirectorPhoto(models.Model):
