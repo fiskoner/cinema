@@ -27,7 +27,14 @@ class ActorSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ActorShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Actor
+        fields = ('id', 'name', 'country')
+
+
 class ActorMovieSerializer(serializers.ModelSerializer):
+    actor = ActorShortSerializer()
 
     class Meta:
         model = models.ActorMovie

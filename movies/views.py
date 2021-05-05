@@ -15,6 +15,11 @@ class MovieViewSet(StaffEditPermissionViewSetMixin):
     pagination_class = pagination.CustomPagination
     filterset_class = filters.MovieFilter
 
+    def get_serializer_class(self):
+        if self.action in ['retrieve']:
+            return serializers.MovieDetailSerializer
+        return self.serializer_class
+
     def get_parsers(self):
         if self.name == 'Upload images':
             return [parser() for parser in (parsers.MultiPartParser, parsers.FormParser)]

@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from core import permissions, pagination
 from core.mixins import view_mixins
-from directory import serializers, models
+from directory import serializers, models, filters
 
 
 class ActorViewSet(view_mixins.StaffEditPermissionViewSetMixin, view_mixins.FileParserViewSetMixin):
@@ -14,6 +14,7 @@ class ActorViewSet(view_mixins.StaffEditPermissionViewSetMixin, view_mixins.File
     serializer_class = serializers.ActorSerializer
     permission_classes = (rest_framework.permissions.IsAuthenticated, rest_framework.permissions.IsAdminUser)
     pagination_class = pagination.CustomPagination
+    filterset_class = filters.ActorFilter
 
     @action(methods=['post'], detail=True)
     @swagger_auto_schema(request_body=serializers.ActorPhotoUploadSerializer)
@@ -39,6 +40,7 @@ class MovieDirectorViewSet(view_mixins.StaffEditPermissionViewSetMixin, view_mix
     serializer_class = serializers.MovieDirectorSerializer
     permission_classes = (rest_framework.permissions.IsAuthenticated, rest_framework.permissions.IsAdminUser)
     pagination_class = pagination.CustomPagination
+    filterset_class = filters.MovieDirectorFilter
 
     @action(methods=['post'], detail=True)
     @swagger_auto_schema(request_body=serializers.ActorPhotoUploadSerializer)
