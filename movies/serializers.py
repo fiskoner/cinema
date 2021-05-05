@@ -18,9 +18,15 @@ class MovieCountrySerializer(serializers.Serializer):
     name = serializers.CharField()
 
 
+class MovieInGenreSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+
+
 class MovieSerializer(serializers.ModelSerializer):
     photos = MoviePhotoUploadSerializer(many=True, read_only=True)
     countries = MovieCountrySerializer(many=True)
+    genres = MovieInGenreSerializer(many=True)
 
     class Meta:
         model = models.Movie
