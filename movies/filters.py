@@ -16,6 +16,7 @@ class MovieFilter(rest_filters.FilterSet):
     )
     actors = rest_filters.CharFilter(method='filter_actors')
     genres = rest_filters.CharFilter(method='filter_genres')
+    countries = rest_filters.CharFilter(method='filter_countries')
 
     class Meta:
         model = models.Movie
@@ -41,5 +42,11 @@ class MovieFilter(rest_filters.FilterSet):
             genres_list = list(map(int, value.split(',')))
         except ValueError:
             raise exceptions.ValidationError('Enter correct value')
-        # models.Movie.objects.filter(genres__in)
         return queryset.filter(genres__in=genres_list).distinct()
+
+    def filter_countries(self, queryset, name, value):
+        try:
+            countries_list = list(map(int, value.split(',')))
+        except ValueError:
+            raise exceptions.ValidationError('Enter correct value')
+        return queryset.filter(countries__in=countries_list).distinct()
