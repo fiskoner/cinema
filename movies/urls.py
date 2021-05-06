@@ -8,6 +8,7 @@ app_name = 'movies'
 router = SimpleRouter()
 
 router.register('movie', views.MovieViewSet)
+router.register('my_ratings', views.UserRatingsViewSet)
 
 urlpatterns = [
     path('set_rating/<int:pk>', views.SetMovieRatingApiView.as_view())

@@ -33,8 +33,15 @@ class MovieSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class MovieRatingSerializer(serializers.Serializer):
+class SetMovieRatingSerializer(serializers.Serializer):
     rating = serializers.IntegerField()
+
+
+class MovieRatingSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.UserMovieRating
+        exclude = ('id', 'user',)
 
 
 class MovieDetailSerializer(MovieSerializer):

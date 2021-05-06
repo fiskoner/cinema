@@ -1,8 +1,11 @@
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import parsers, status, mixins
 from rest_framework.decorators import action
-from rest_framework import permissions as rest_permissions, status, parsers
+from rest_framework import permissions as rest_permissions
+
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
 
 from core import pagination, permissions
 from core.mixins.view_mixins import StaffEditPermissionViewSetMixin
@@ -41,7 +44,7 @@ class MovieViewSet(StaffEditPermissionViewSetMixin):
 
 class SetMovieRatingApiView(GenericAPIView):
     queryset = models.Movie.objects.all()
-    serializer_class = serializers.MovieRatingSerializer
+    serializer_class = serializers.SetMovieRatingSerializer
     permission_classes = (rest_permissions.IsAuthenticated, permissions.IsUserPermission)
 
     def post(self, request, *args, **kwargs):
@@ -55,3 +58,14 @@ class SetMovieRatingApiView(GenericAPIView):
             defaults={'rating': data.get('rating')}
         )
         return Response({'status': 'success', 'movie_rating': movie.rating}, status=status.HTTP_200_OK)
+
+
+class UserRatingsViewSet(GenericViewSet,
+                         mixins.ListModelMixin):
+    queryset = models.UserMovieRating.objects.all()
+    serializer_class = serializers.MovieRatingSerializer
+    permission_classes = (rest_permissions.IsAuthenticated, permissions.IsUserPermission)
+    pagination_class = pagination.CustomPagination
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
