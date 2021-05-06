@@ -22,9 +22,14 @@ class MovieGenreInline(admin.TabularInline):
     model = models.Movie.genres.through
 
 
+class CountryInline(admin.TabularInline):
+    model = models.Movie.countries.through
+
+
 class MovieAdmin(admin.ModelAdmin):
-    inlines = (MoviePhotoInline, ActorInline, MovieDirectorInline, MovieGenreInline)
+    inlines = (MoviePhotoInline, ActorInline, MovieDirectorInline, MovieGenreInline, CountryInline)
     list_display = ('id', 'name', 'release_date', 'duration')
+    exclude = ('countries', 'genres')
 
 
 admin.site.register(models.Movie, MovieAdmin)
