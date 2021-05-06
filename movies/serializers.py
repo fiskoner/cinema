@@ -33,6 +33,10 @@ class MovieSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class MovieRatingSerializer(serializers.Serializer):
+    rating = serializers.IntegerField()
+
+
 class MovieDetailSerializer(MovieSerializer):
     actors = directory_serializers.ActorMovieSerializer(many=True)
 
