@@ -10,7 +10,6 @@ class StaffEditPermissionViewSetMixin(ModelViewSet):
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
             return rest_framework.permissions.IsAuthenticated(), permissions.IsUserPermission()
-        print(self.permission_classes)
         return (permission() for permission in self.permission_classes)
 
 
