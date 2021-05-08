@@ -26,8 +26,13 @@ class CountryInline(admin.TabularInline):
     model = models.Movie.countries.through
 
 
+class MovieVideoFilesAdmin(admin.StackedInline):
+    model = models.MovieVideoFiles
+
+
 class MovieAdmin(admin.ModelAdmin):
-    inlines = (MoviePhotoInline, ActorInline, MovieDirectorInline, MovieGenreInline, CountryInline)
+    inlines = (MoviePhotoInline, ActorInline, MovieDirectorInline, MovieGenreInline, CountryInline,
+               MovieVideoFilesAdmin)
     list_display = ('id', 'name', 'release_date', 'duration')
     exclude = ('countries', 'genres')
 

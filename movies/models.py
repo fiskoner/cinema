@@ -1,3 +1,4 @@
+from admin_async_upload.models import AsyncFileField
 from django.db import models
 
 # Create your models here.
@@ -20,6 +21,13 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class MovieVideoFiles(models.Model):
+    movie = models.OneToOneField(Movie, on_delete=models.CASCADE, related_name='videos')
+    video_360p = AsyncFileField(max_length=500, null=True, blank=True)
+    video_480p = AsyncFileField(max_length=500, null=True, blank=True)
+    video_720p = AsyncFileField(max_length=500, null=True, blank=True)
 
 
 class UserMovieRating(models.Model):

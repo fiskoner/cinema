@@ -26,7 +26,8 @@ urlpatterns = [
    path('admin/', admin.site.urls),
    path('api/v1/auth/', include('authorization.urls')),
    path('api/v1/directory/', include('directory.urls')),
-   path('api/v1/movies/', include('movies.urls'))
+   path('api/v1/movies/', include('movies.urls')),
+   url(r'^admin_async_upload/', include('admin_async_upload.urls')),
 ]
 
 
