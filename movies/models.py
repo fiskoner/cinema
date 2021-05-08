@@ -57,7 +57,10 @@ class MoviePhoto(models.Model):
 
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='photos')
     image = models.FileField(upload_to=get_images_upload_path)
-    is_title = models.BooleanField(null=True, unique=True)  # SHIT CODE BUT ITS WORKING
+    is_title = models.BooleanField(null=True)  # SHIT CODE BUT ITS WORKING
 
     def __str__(self):
         return self.movie.name
+
+    class Meta:
+        unique_together = ('movie', 'is_title',)
