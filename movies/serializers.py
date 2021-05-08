@@ -44,8 +44,16 @@ class MovieRatingSerializer(serializers.ModelSerializer):
         exclude = ('id', 'user',)
 
 
+class MovieVideoFiles(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.MovieVideoFiles
+        exclude = ('id', 'movie')
+
+
 class MovieDetailSerializer(MovieSerializer):
     actors = directory_serializers.ActorMovieSerializer(many=True)
+    videos = MovieVideoFiles(read_only=True)
 
     class Meta:
         model = models.Movie
