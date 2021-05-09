@@ -1,4 +1,5 @@
 from admin_async_upload.models import AsyncFileField
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 # Create your models here.
@@ -12,8 +13,9 @@ class Movie(models.Model):
     duration = models.DurationField(null=True)
     countries = models.ManyToManyField('directory.Country', related_name='movies')
     genres = models.ManyToManyField('directory.MovieGenre', related_name='movies')
-    rating = models.FloatField(default=0)
+    rating = models.FloatField(default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
     user_rated = models.ManyToManyField(User, related_name='movies', through='movies.UserMovieRating')
+    user_watched = models.ManyToManyField(User, related_name='movies_watched', through='movies.MovieUserPlayed')
 
     class Meta:
         verbose_name = 'Кино'
@@ -23,7 +25,13 @@ class Movie(models.Model):
         return self.name
 
 
+def get_movies_videos_upload_path(instance, filename):
+
+    return f'movies/{instance.movie.name}/videos/{filename}'
+
+
 class MovieVideoFiles(models.Model):
+
     movie = models.OneToOneField(Movie, on_delete=models.CASCADE, related_name='videos')
     video_360p = AsyncFileField(max_length=500, null=True, blank=True)
     video_480p = AsyncFileField(max_length=500, null=True, blank=True)
@@ -33,7 +41,7 @@ class MovieVideoFiles(models.Model):
 class UserMovieRating(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='ratings')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ratings')
-    rating = models.IntegerField(default=0)
+    rating = models.IntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
 
     def count_movie_rating(self):
         movie = self.movie
@@ -64,3 +72,9 @@ class MoviePhoto(models.Model):
 
     class Meta:
         unique_together = ('movie', 'is_title',)
+
+
+class MovieUserPlayed(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='users_played')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='movies_played')
+    duration_watched = models.DurationField(null=True)
