@@ -13,9 +13,13 @@ range_re = re.compile(r'bytes\s*=\s*(\d+)\s*-\s*(\d*)', re.I)
 
 
 def check_subscription(user, movie):
-    if not MovieSubscription.objects.filter(user=user, movie=movie).exists():
+    movie_in_subscription = MovieSubscription.objects.filter(movie=movie)
+    if not movie_in_subscription.exists():
+        return True
+    if not movie_in_subscription.objects.filter(user=user, movie=movie).exists():
         raise exceptions.ValidationError('Please register subscription for watching this movie')
     return True
+
 
 class RangeFileWrapper(object):
     def __init__(self, filelike, blksize=8192, offset=0, length=None):
