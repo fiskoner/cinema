@@ -28,13 +28,36 @@ class CountryInline(admin.TabularInline):
 
 class MovieVideoFilesAdmin(admin.StackedInline):
     model = models.MovieVideoFiles
+    verbose_name = 'Подписка'
+    verbose_name_plural = 'Подписки'
+
+
+class MovieSubscriptionInline(admin.TabularInline):
+    model = models.Movie.subscriptions.through
+    verbose_name = 'Подписка'
+    verbose_name_plural = 'Подписки'
 
 
 class MovieAdmin(admin.ModelAdmin):
     inlines = (MoviePhotoInline, ActorInline, MovieDirectorInline, MovieGenreInline, CountryInline,
-               MovieVideoFilesAdmin)
+               MovieVideoFilesAdmin, MovieSubscriptionInline)
     list_display = ('id', 'name', 'release_date', 'duration')
     exclude = ('countries', 'genres')
 
 
+class MovieInline(admin.TabularInline):
+    model = models.MovieSubscription.movies.through
+
+
+class UserSubscriptionInline(admin.TabularInline):
+    model = models.MovieSubscription.users.through
+
+
+class MovieSubscriptionAdmin(admin.ModelAdmin):
+    inlines = (MovieInline, UserSubscriptionInline,)
+    list_display = ('id', 'name',)
+    exclude = ('movies', 'users',)
+
+
 admin.site.register(models.Movie, MovieAdmin)
+admin.site.register(models.MovieSubscription, MovieSubscriptionAdmin)

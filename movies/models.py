@@ -97,3 +97,10 @@ class MovieSubscription(models.Model):
     price = models.IntegerField(default=0)
     movies = models.ManyToManyField('movies.Movie', related_name='subscriptions')
     users = models.ManyToManyField(User, related_name='subscriptions')
+
+    class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
+
+    def __str__(self):
+        return f'{self.name}, {self.price} грн.'
