@@ -55,7 +55,7 @@ class UserSubscriptionInline(admin.TabularInline):
 
 class MovieSubscriptionAdmin(admin.ModelAdmin):
     inlines = (MovieInline, UserSubscriptionInline,)
-    list_display = ('id', 'name',)
+    list_display = ('id', 'name', 'price')
     exclude = ('movies', 'users',)
 
 
