@@ -27,11 +27,24 @@ class MovieInGenreSerializer(serializers.Serializer):
     name = serializers.CharField()
 
 
+class MovieSubscriptionSerializer(serializers.ModelSerializer):
+    is_subscribed = serializers.SerializerMethodField(method_name='check_user_subscribed')
+
+    class Meta:
+        model = models.MovieSubscription
+        fields = ('id', 'name', 'is_subscribed',)
+
+    def check_user_subscribed(self, instance: models.MovieSubscription):
+        user = self.context.get('request').user
+        return user in instance.users.all()
+
+
 class MovieSerializer(serializers.ModelSerializer):
     photos = MoviePhotoUploadSerializer(many=True, read_only=True)
     countries = MovieCountrySerializer(many=True)
     genres = MovieInGenreSerializer(many=True)
     time_watched = serializers.SerializerMethodField(method_name='get_time_watched')
+    subscriptions = MovieSubscriptionSerializer(many=True, required=False)
 
     class Meta:
         model = models.Movie
@@ -43,6 +56,13 @@ class MovieSerializer(serializers.ModelSerializer):
         if time_watched.exists():
             return time_watched.first().duration_watched
         return None
+
+
+class MovieSubscriptionDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        models = models.MovieSubscription
+        fields = '__all__'
 
 
 class SetMovieRatingSerializer(serializers.Serializer):
@@ -61,13 +81,13 @@ class MovieRatingSerializer(serializers.ModelSerializer):
 
 
 class MovieVideoFiles(serializers.ModelSerializer):
-    video_360p = serializers.FileField(use_url=False)
-    video_480p = serializers.FileField(use_url=False)
-    video_720p = serializers.FileField(use_url=False)
+    video_360p = serializers.BooleanField(source='video_360p_exists')
+    video_480p = serializers.BooleanField(source='video_480p_exists')
+    video_720p = serializers.BooleanField(source='video_720p_exists')
 
     class Meta:
         model = models.MovieVideoFiles
-        exclude = ('id', 'movie')
+        fields = ('video_360p', 'video_480p', 'video_720p')
 
 
 class MovieDetailSerializer(MovieSerializer):

@@ -1,6 +1,6 @@
 import datetime
 
-from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.utils import swagger_auto_schema, no_body
 from rest_framework import parsers, status, mixins, exceptions
 from rest_framework.decorators import action
 from rest_framework import permissions as rest_permissions
@@ -55,7 +55,7 @@ class MovieViewSet(StaffEditPermissionViewSetMixin):
         video = quality_dict.get(quality)
         if not video:
             raise exceptions.ValidationError('File not found')
-        utils.check_subscription(self.request.user, movie)
+        utils.check_subscription(user=self.request.user, movie=movie)
         response = utils.stream_video(request=request, path=video.path)
         return response
 
@@ -107,3 +107,20 @@ class UserRatingsViewSet(GenericViewSet,
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
+
+
+class SubscriptionViewSet(GenericViewSet,
+                          mixins.ListModelMixin):
+    queryset = models.MovieSubscription.objects.all()
+    serializer_class = serializers.MovieSubscriptionSerializer
+    permission_classes = (rest_permissions.IsAuthenticated, permissions.IsUserPermission)
+
+    @action(methods=['post'], detail=True)
+    @swagger_auto_schema(request_body=no_body)
+    def subscribe(self, request, *args, **kwargs):
+        subscription: models.MovieSubscription = self.get_object()
+        user = self.request.user
+        if user in subscription.users.all():
+            raise exceptions.ValidationError('You already have this subscription')
+        subscription.users.add(user)
+        return Response('Success', status=status.HTTP_200_OK)

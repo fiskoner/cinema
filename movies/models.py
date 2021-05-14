@@ -37,6 +37,18 @@ class MovieVideoFiles(models.Model):
     video_480p = AsyncFileField(max_length=500, null=True, blank=True)
     video_720p = AsyncFileField(max_length=500, null=True, blank=True)
 
+    @property
+    def video_360p_exists(self):
+        return not self.video_360p == None
+
+    @property
+    def video_480p_exists(self):
+        return not self.video_480p == None
+
+    @property
+    def video_720p_exists(self):
+        return not self.video_720p == None
+
 
 class UserMovieRating(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='ratings')
@@ -83,5 +95,5 @@ class MovieUserPlayed(models.Model):
 class MovieSubscription(models.Model):
     name = models.CharField(max_length=255, default='', blank=True)
     price = models.IntegerField(default=0)
-    movie = models.ManyToManyField('movies.Movie', related_name='users_subscribed')
-    user = models.ManyToManyField(User, related_name='movies_subscribed')
+    movies = models.ManyToManyField('movies.Movie', related_name='subscriptions')
+    users = models.ManyToManyField(User, related_name='subscriptions')
