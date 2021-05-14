@@ -78,3 +78,10 @@ class MovieUserPlayed(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='users_played')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='movies_played')
     duration_watched = models.DurationField(null=True)
+
+
+class MovieSubscription(models.Model):
+    name = models.CharField(max_length=255, default='', blank=True)
+    price = models.IntegerField(default=0)
+    movie = models.ManyToManyField('movies.Movie', related_name='users_subscribed')
+    user = models.ManyToManyField(User, related_name='movies_subscribed')

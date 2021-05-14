@@ -7,9 +7,15 @@ from django.http.response import StreamingHttpResponse
 from rest_framework import exceptions
 
 from cinema import settings
+from movies.models import MovieSubscription
 
 range_re = re.compile(r'bytes\s*=\s*(\d+)\s*-\s*(\d*)', re.I)
 
+
+def check_subscription(user, movie):
+    if not MovieSubscription.objects.filter(user=user, movie=movie).exists():
+        raise exceptions.ValidationError('Please register subscription for watching this movie')
+    return True
 
 class RangeFileWrapper(object):
     def __init__(self, filelike, blksize=8192, offset=0, length=None):

@@ -19,8 +19,7 @@ from movies.models import UserMovieRating
 class MovieViewSet(StaffEditPermissionViewSetMixin):
     queryset = models.Movie.objects.prefetch_related('user_watched').all()
     serializer_class = serializers.MovieSerializer
-    # permission_classes = (rest_permissions.IsAuthenticated, rest_permissions.IsAdminUser, )
-    permission_classes = (rest_permissions.AllowAny,)
+    permission_classes = (rest_permissions.IsAuthenticated,)
     pagination_class = pagination.CustomPagination
     filterset_class = filters.MovieFilter
 
@@ -46,8 +45,18 @@ class MovieViewSet(StaffEditPermissionViewSetMixin):
         return Response({'status': 'success', 'data': data}, status=status.HTTP_200_OK)
 
     def stream_video(self, request, *args, **kwargs):
-        file = kwargs.get('file')
-        response = utils.stream_video(request=request, path=file)
+        movie = self.get_object()
+        quality = self.kwargs.get('quality')
+        quality_dict = {
+            360: movie.videos.video_360p,
+            480: movie.videos.video_480p,
+            720: movie.videos.video_720p
+        }
+        video = quality_dict.get(quality)
+        if not video:
+            raise exceptions.ValidationError('File not found')
+        utils.check_subscription(self.request.user, movie)
+        response = utils.stream_video(request=request, path=video.path)
         return response
 
 
