@@ -10,7 +10,7 @@ router = routers.SimpleRouter()
 router.register('user', views.UserViewSet)
 
 urlpatterns = [
-    path('login/', views.UserLoginView.as_view()),
+    path('login/', views.UserLoginView.as_view(), name='login'),
     path('user_info/', views.UserInfoViewSet.as_view({'get': 'retrieve'})),
 ]
 
