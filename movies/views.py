@@ -19,7 +19,9 @@ from movies.models import UserMovieRating
 class MovieViewSet(StaffEditPermissionViewSetMixin):
     queryset = models.Movie.objects.prefetch_related('user_watched').all()
     serializer_class = serializers.MovieSerializer
-    permission_classes = (rest_permissions.IsAuthenticated,)
+    permission_classes = (
+        rest_permissions.IsAuthenticated, rest_permissions.IsAdminUser
+    )
     pagination_class = pagination.CustomPagination
     filterset_class = filters.MovieFilter
 
