@@ -29,10 +29,22 @@ class MovieInGenreSerializer(serializers.Serializer):
 
 class MovieSubscriptionSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField(method_name='check_user_subscribed')
+    time_end = serializers.SerializerMethodField()
 
     class Meta:
         model = models.MovieSubscription
-        fields = ('id', 'name', 'is_subscribed',)
+        fields = ('id', 'name', 'is_subscribed', 'time_end',)
+
+    def get_time_end(self, instance: models.MovieSubscription):
+        user = self.context.get('request').user
+        if user.is_anonymous:
+            return None
+        subscription = instance.subscription_users.filter(user=user, subscription=instance)
+        if subscription.exists():
+            return subscription.first().time_end.strftime('%Y-%m-%d %H:%M:%S')
+        return None
+
+
 
     def check_user_subscribed(self, instance: models.MovieSubscription):
         user = self.context.get('request').user
@@ -52,6 +64,8 @@ class MovieSerializer(serializers.ModelSerializer):
 
     def get_time_watched(self, instance: models.Movie):
         user = self.context.get('request').user
+        if user.is_anonymous:
+            return None
         time_watched = instance.users_played.filter(user=user)
         if time_watched.exists():
             return time_watched.first().duration_watched
@@ -91,7 +105,7 @@ class MovieVideoFiles(serializers.ModelSerializer):
 
 
 class MovieDetailSerializer(MovieSerializer):
-    actors = directory_serializers.ActorMovieSerializer(many=True)
+    # actors = directory_serializers.ActorMovieSerializer(many=True)
     videos = MovieVideoFiles(read_only=True)
 
     class Meta:

@@ -3,6 +3,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 # Create your models here.
+from django.utils import timezone
+
 from core.models import User
 
 
@@ -92,11 +94,20 @@ class MovieUserPlayed(models.Model):
     duration_watched = models.DurationField(null=True)
 
 
+class MovieToUserSubscription(models.Model):
+    created_at = models.DateTimeField(default=timezone.now)
+    time_end = models.DateTimeField(null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_subscriptions')
+    subscription = models.ForeignKey(
+        'movies.MovieSubscription', on_delete=models.CASCADE, related_name='subscription_users'
+    )
+
+
 class MovieSubscription(models.Model):
     name = models.CharField(max_length=255, default='', blank=True)
     price = models.IntegerField(default=0)
     movies = models.ManyToManyField('movies.Movie', related_name='subscriptions')
-    users = models.ManyToManyField(User, related_name='subscriptions')
+    users = models.ManyToManyField(User, related_name='subscriptions', through='movies.MovieToUserSubscription')
 
     class Meta:
         verbose_name = 'Подписка'

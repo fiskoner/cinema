@@ -39,7 +39,9 @@ class MovieSubscriptionInline(admin.TabularInline):
 
 
 class MovieAdmin(admin.ModelAdmin):
-    inlines = (MoviePhotoInline, ActorInline, MovieDirectorInline, MovieGenreInline, CountryInline,
+    # inlines = (MoviePhotoInline, ActorInline, MovieDirectorInline, MovieGenreInline, CountryInline,
+    #            MovieVideoFilesAdmin, MovieSubscriptionInline)
+    inlines = (MoviePhotoInline, MovieGenreInline, CountryInline,
                MovieVideoFilesAdmin, MovieSubscriptionInline)
     list_display = ('id', 'name', 'release_date', 'duration')
     exclude = ('countries', 'genres')

@@ -4,6 +4,7 @@ import mimetypes
 from wsgiref.util import FileWrapper
 
 from django.http.response import StreamingHttpResponse
+from django.utils import timezone
 from rest_framework import exceptions
 
 from cinema import settings
@@ -16,8 +17,12 @@ def check_subscription(user, movie):
     movie_in_subscription = MovieSubscription.objects.filter(movies=movie)
     if not movie_in_subscription.exists():
         return True
-    if not movie_in_subscription.filter(users=user, movies=movie).exists():
+    user_subscription = movie_in_subscription.filter(users=user, movies=movie)
+    if not user_subscription.exists():
         raise exceptions.ValidationError('Please register subscription for watching this movie')
+    user_subscription: MovieSubscription = movie_in_subscription.first()
+    if user_subscription.subscription_users.get(user=user, subscription=user_subscription).time_end < timezone.now():
+        raise exceptions.ValidationError('Your subscription is ended, please subscribe again to watch this movie')
     return True
 
 
