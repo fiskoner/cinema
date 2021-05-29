@@ -29,10 +29,22 @@ class MovieInGenreSerializer(serializers.Serializer):
 
 class MovieSubscriptionSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField(method_name='check_user_subscribed')
+    time_end = serializers.SerializerMethodField()
 
     class Meta:
         model = models.MovieSubscription
-        fields = ('id', 'name', 'is_subscribed',)
+        fields = ('id', 'name', 'is_subscribed', 'time_end',)
+
+    def get_time_end(self, instance: models.MovieSubscription):
+        user = self.context.get('request').user
+        if user.is_anonymous:
+            return None
+        subscription = instance.subscription_users.filter(user=user, subscription=instance)
+        if subscription.exists():
+            return subscription.first().time_end.strftime('%Y-%m-%d %H:%M:%S')
+        return None
+
+
 
     def check_user_subscribed(self, instance: models.MovieSubscription):
         user = self.context.get('request').user
