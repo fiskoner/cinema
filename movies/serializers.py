@@ -58,10 +58,11 @@ class MovieSerializer(serializers.ModelSerializer):
     time_watched = serializers.SerializerMethodField(method_name='get_time_watched')
     subscriptions = MovieSubscriptionSerializer(many=True, required=False)
     user_rating = serializers.SerializerMethodField()
+    user_rated_count = serializers.IntegerField()
 
     class Meta:
         model = models.Movie
-        fields = '__all__'
+        exclude = ('user_rated', )
         include = ('user_rating', )
 
     def get_time_watched(self, instance: models.Movie):

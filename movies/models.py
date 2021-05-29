@@ -26,6 +26,9 @@ class Movie(models.Model):
     def __str__(self):
         return self.name
 
+    def user_rated_count(self):
+        return self.user_rated.all().count()
+
 
 def get_movies_videos_upload_path(instance, filename):
 
