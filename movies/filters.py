@@ -17,6 +17,7 @@ class MovieFilter(rest_filters.FilterSet):
     actors = rest_filters.CharFilter(method='filter_actors')
     genres = rest_filters.CharFilter(method='filter_genres')
     countries = rest_filters.CharFilter(method='filter_countries')
+    watched = rest_filters.BooleanFilter(method='get_user_watched')
 
     class Meta:
         model = models.Movie
@@ -50,3 +51,11 @@ class MovieFilter(rest_filters.FilterSet):
         except ValueError:
             raise exceptions.ValidationError('Enter correct value')
         return queryset.filter(countries__in=countries_list).distinct()
+
+    def get_user_watched(self, queryset, name, value):
+        user = self.request.user
+        if user.is_anonymous:
+            return queryset.all()
+        if not value:
+            return queryset.exclude(user_watched=user)
+        return queryset.filter(user_watched=user)
