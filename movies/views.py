@@ -8,11 +8,9 @@ from rest_framework import permissions as rest_permissions
 
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from core import pagination, permissions
-from core.mixins.view_mixins import StaffEditPermissionViewSetMixin
 from movies import serializers, models, filters, utils
 from movies.models import UserMovieRating
 
@@ -131,9 +129,11 @@ class SubscriptionViewSet(GenericViewSet,
     @swagger_auto_schema(request_body=no_body)
     def subscribe(self, request, *args, **kwargs):
         subscription: models.MovieSubscription = self.get_object()
-        months = timezone.now() + datetime.datetime(month=self.kwargs.get('months'))
+        time_end = timezone.now() + datetime.datetime(month=self.kwargs.get('months'))
         user = self.request.user
         if user in subscription.users.all():
             raise exceptions.ValidationError('You already have this subscription')
-        models.MovieToUserSubscription.objects.create(subscription=subscription, user=self.request.user)
+        models.MovieToUserSubscription.objects.create(
+            subscription=subscription, user=self.request.user, time_end=time_end
+        )
         return Response('Success', status=status.HTTP_200_OK)
