@@ -19,7 +19,7 @@ class MovieViewSet(ModelViewSet):
     queryset = models.Movie.objects.prefetch_related('user_watched').all()
     serializer_class = serializers.MovieSerializer
     permission_classes = (
-        rest_permissions.IsAuthenticated, rest_permissions.IsAdminUser
+        rest_permissions.IsAuthenticated,
     )
     pagination_class = pagination.CustomPagination
     filterset_class = filters.MovieFilter
@@ -27,6 +27,8 @@ class MovieViewSet(ModelViewSet):
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
             return (rest_permissions.AllowAny(),)
+        if self.action in ['update', 'create']:
+            return (rest_permissions.IsAdminUser(),)
         return (permission() for permission in self.permission_classes)
 
     def get_serializer_class(self):
