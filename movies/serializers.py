@@ -57,10 +57,12 @@ class MovieSerializer(serializers.ModelSerializer):
     genres = MovieInGenreSerializer(many=True)
     time_watched = serializers.SerializerMethodField(method_name='get_time_watched')
     subscriptions = MovieSubscriptionSerializer(many=True, required=False)
+    user_rating = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Movie
         fields = '__all__'
+        include = ('user_rating', )
 
     def get_time_watched(self, instance: models.Movie):
         user = self.context.get('request').user
@@ -70,6 +72,15 @@ class MovieSerializer(serializers.ModelSerializer):
         if time_watched.exists():
             return time_watched.first().duration_watched
         return None
+
+    def get_user_rating(self, instance: models.Movie):
+        user = self.context.get('request').user
+        if user.is_anonymous:
+            return None
+        user_rating = models.UserMovieRating.objects.filter(user=user, movie=instance)
+        if not user_rating.exists():
+            return None
+        return user_rating.first().rating
 
 
 class MovieSubscriptionDetailSerializer(serializers.ModelSerializer):
