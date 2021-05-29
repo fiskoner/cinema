@@ -1,5 +1,6 @@
 import datetime
 
+from django.utils import timezone
 from drf_yasg.utils import swagger_auto_schema, no_body
 from rest_framework import parsers, status, mixins, exceptions
 from rest_framework.decorators import action
@@ -8,7 +9,7 @@ from rest_framework import permissions as rest_permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from core import pagination, permissions
 from core.mixins.view_mixins import StaffEditPermissionViewSetMixin
@@ -16,7 +17,7 @@ from movies import serializers, models, filters, utils
 from movies.models import UserMovieRating
 
 
-class MovieViewSet(StaffEditPermissionViewSetMixin):
+class MovieViewSet(ModelViewSet):
     queryset = models.Movie.objects.prefetch_related('user_watched').all()
     serializer_class = serializers.MovieSerializer
     permission_classes = (
@@ -24,6 +25,11 @@ class MovieViewSet(StaffEditPermissionViewSetMixin):
     )
     pagination_class = pagination.CustomPagination
     filterset_class = filters.MovieFilter
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return (rest_permissions.AllowAny(),)
+        return (permission() for permission in self.permission_classes)
 
     def get_serializer_class(self):
         if self.action in ['retrieve']:
@@ -117,12 +123,17 @@ class SubscriptionViewSet(GenericViewSet,
     serializer_class = serializers.MovieSubscriptionSerializer
     permission_classes = (rest_permissions.IsAuthenticated, permissions.IsUserPermission)
 
-    @action(methods=['post'], detail=True)
+    def get_permissions(self):
+        if self.action in ['list']:
+            return (permission() for permission in (rest_permissions.AllowAny,))
+        return (permission() for permission in self.permission_classes)
+
     @swagger_auto_schema(request_body=no_body)
     def subscribe(self, request, *args, **kwargs):
         subscription: models.MovieSubscription = self.get_object()
+        months = timezone.now() + datetime.datetime(month=self.kwargs.get('months'))
         user = self.request.user
         if user in subscription.users.all():
             raise exceptions.ValidationError('You already have this subscription')
-        subscription.users.add(user)
+        models.MovieToUserSubscription.objects.create(subscription=subscription, user=self.request.user)
         return Response('Success', status=status.HTTP_200_OK)

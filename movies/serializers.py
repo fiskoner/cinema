@@ -52,6 +52,8 @@ class MovieSerializer(serializers.ModelSerializer):
 
     def get_time_watched(self, instance: models.Movie):
         user = self.context.get('request').user
+        if user.is_anonymous:
+            return None
         time_watched = instance.users_played.filter(user=user)
         if time_watched.exists():
             return time_watched.first().duration_watched
@@ -91,7 +93,7 @@ class MovieVideoFiles(serializers.ModelSerializer):
 
 
 class MovieDetailSerializer(MovieSerializer):
-    actors = directory_serializers.ActorMovieSerializer(many=True)
+    # actors = directory_serializers.ActorMovieSerializer(many=True)
     videos = MovieVideoFiles(read_only=True)
 
     class Meta:
