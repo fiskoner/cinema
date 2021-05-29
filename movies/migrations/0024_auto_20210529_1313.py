@@ -14,7 +14,11 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
+        migrations.RemoveField(
+            model_name='moviesubscription',
+            name='users',
+        ),
+        migrations.AddField(
             model_name='moviesubscription',
             name='users',
             field=models.ManyToManyField(related_name='subscriptions', through='movies.MovieToUserSubscription', to=settings.AUTH_USER_MODEL),
