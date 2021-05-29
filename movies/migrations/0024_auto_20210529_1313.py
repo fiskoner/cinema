@@ -14,16 +14,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='MovieToUserSubscription',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(default=django.utils.timezone.now)),
-                ('time_end', models.DateTimeField(null=True)),
-                ('subscription', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='subscription_users', to='movies.moviesubscription')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='user_subscriptions', to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
         migrations.AlterField(
             model_name='moviesubscription',
             name='users',
