@@ -25,7 +25,7 @@ class MovieDirectorAdmin(admin.ModelAdmin):
     inlines = (MovieDirectorPhotoInline)
 
 
-# admin.site.register(models.Actor, ActorAdmin)
-# admin.site.register(models.ActorMovie)
-# admin.site.register(models.MovieDirector)
+admin.site.register(models.Actor, ActorAdmin)
+admin.site.register(models.ActorMovie)
+admin.site.register(models.MovieDirector)
 admin.site.register(models.MovieGenre)

@@ -117,7 +117,8 @@ class MovieVideoFiles(serializers.ModelSerializer):
 
 
 class MovieDetailSerializer(MovieSerializer):
-    # actors = directory_serializers.ActorMovieSerializer(many=True)
+    actors = directory_serializers.ActorMovieSerializer(many=True)
+    directors = directory_serializers.MovieDirectorSerializer(many=True)
     videos = MovieVideoFiles(read_only=True)
 
     class Meta:
