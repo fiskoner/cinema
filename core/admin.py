@@ -18,3 +18,9 @@ class AdminUser(admin.ModelAdmin):
     list_filter = ('user_type',)
     search_fields = ('username', 'first_name', 'last_name',)
     model = User
+
+    def has_change_permission(self, request, obj=None):
+        user = request.user
+        if not user.is_director:
+            return False
+        return True

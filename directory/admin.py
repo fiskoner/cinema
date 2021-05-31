@@ -13,6 +13,7 @@ class ActorPhotoInline(ImageInlineMixin):
 
 class ActorAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'country', 'date_birth')
+    search_fields = ('name',)
     inlines = (ActorPhotoInline,)
 
 
@@ -21,11 +22,12 @@ class MovieDirectorPhotoInline(ImageInlineMixin):
 
 
 class MovieDirectorAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name' 'country', 'date_birth')
-    inlines = (MovieDirectorPhotoInline)
+    list_display = ('id', 'name', 'country', 'date_birth')
+    search_fields = ('name',)
+    inlines = (MovieDirectorPhotoInline,)
 
 
 admin.site.register(models.Actor, ActorAdmin)
 admin.site.register(models.ActorMovie)
-admin.site.register(models.MovieDirector)
+admin.site.register(models.MovieDirector, MovieDirectorAdmin)
 admin.site.register(models.MovieGenre)
