@@ -17,6 +17,8 @@ def check_subscription(user, movie):
     movie_in_subscription = MovieSubscription.objects.filter(movies=movie)
     if user.is_anonymous and movie.subscriptions.exists():
         return 'Please register subscription for watching this movie'
+    elif user.is_anonymous:
+        return True
     if not movie_in_subscription.exists():
         return True
     user_subscription = movie_in_subscription.filter(users=user, movies=movie)
