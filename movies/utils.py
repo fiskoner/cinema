@@ -15,6 +15,8 @@ range_re = re.compile(r'bytes\s*=\s*(\d+)\s*-\s*(\d*)', re.I)
 
 def check_subscription(user, movie):
     movie_in_subscription = MovieSubscription.objects.filter(movies=movie)
+    if user.is_anonymous and movie.subscriptions.exists():
+        return 'Please register subscription for watching this movie'
     if not movie_in_subscription.exists():
         return True
     user_subscription = movie_in_subscription.filter(users=user, movies=movie)

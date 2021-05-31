@@ -86,6 +86,8 @@ class MovieSerializer(serializers.ModelSerializer):
 
     def check_subscription(self, instance: models.Movie):
         user = self.context.get('request').user
+        if user.is_anonymous and instance.subscriptions.exists():
+            return 'Please register subscription for watching this movie'
         movie_in_subscription = MovieSubscription.objects.filter(movies=instance)
         if not movie_in_subscription.exists():
             return True

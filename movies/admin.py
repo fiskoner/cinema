@@ -42,6 +42,7 @@ class MovieAdmin(admin.ModelAdmin):
     inlines = (MoviePhotoInline, MovieGenreInline, CountryInline, MovieVideoFilesAdmin, MovieSubscriptionInline,
                ActorInline, MovieDirectorInline)
     list_display = ('id', 'name', 'release_date', 'duration')
+    search_fields = ('name',)
     exclude = ('countries', 'genres')
 
 

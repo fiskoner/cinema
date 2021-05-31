@@ -15,4 +15,6 @@ class UserSubscriptionInline(admin.TabularInline):
 @admin.register(User)
 class AdminUser(admin.ModelAdmin):
     inlines = (UserSubscriptionInline,)
+    list_filter = ('user_type',)
+    search_fields = ('username', 'first_name', 'last_name',)
     model = User
