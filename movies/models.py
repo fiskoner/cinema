@@ -98,8 +98,8 @@ class MovieUserPlayed(models.Model):
 
 
 class MovieToUserSubscription(models.Model):
-    created_at = models.DateTimeField(default=timezone.now)
-    time_end = models.DateTimeField(null=True)
+    created_at = models.DateTimeField(default=timezone.now, verbose_name='Дата подписания')
+    time_end = models.DateTimeField(null=True, verbose_name='Дата окончания подписки')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_subscriptions')
     subscription = models.ForeignKey(
         'movies.MovieSubscription', on_delete=models.CASCADE, related_name='subscription_users'

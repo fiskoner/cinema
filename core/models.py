@@ -20,7 +20,7 @@ class User(AbstractUser):
     phone = models.CharField(max_length=20, default='', blank=True, verbose_name='Телефон')
     description = models.TextField(default='', blank=True, verbose_name='Описание')
     date_birth = models.DateField(null=True, blank=True, verbose_name='День рождения')
-    discount = models.FloatField(null=True, verbose_name='Скидка')
+    # discount = models.FloatField(null=True, verbose_name='Скидка')
 
     class Meta:
         verbose_name = 'Пользователь'

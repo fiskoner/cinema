@@ -1,8 +1,10 @@
-from rest_framework import serializers
+from django.utils import timezone
+from rest_framework import serializers, exceptions
 
 from directory.models import Country
 from directory import serializers as directory_serializers
 from movies import models
+from movies.models import MovieSubscription
 
 
 class MoviePhotoUploadSerializer(serializers.ModelSerializer):
@@ -44,8 +46,6 @@ class MovieSubscriptionSerializer(serializers.ModelSerializer):
             return subscription.first().time_end.strftime('%Y-%m-%d %H:%M:%S')
         return None
 
-
-
     def check_user_subscribed(self, instance: models.MovieSubscription):
         user = self.context.get('request').user
         return user in instance.users.all()
@@ -59,6 +59,7 @@ class MovieSerializer(serializers.ModelSerializer):
     subscriptions = MovieSubscriptionSerializer(many=True, required=False)
     user_rating = serializers.SerializerMethodField()
     user_rated_count = serializers.IntegerField()
+    subscription_active = serializers.SerializerMethodField(method_name='check_subscription')
 
     class Meta:
         model = models.Movie
@@ -82,6 +83,20 @@ class MovieSerializer(serializers.ModelSerializer):
         if not user_rating.exists():
             return None
         return user_rating.first().rating
+
+    def check_subscription(self, instance: models.Movie):
+        user = self.context.get('request').user
+        movie_in_subscription = MovieSubscription.objects.filter(movies=instance)
+        if not movie_in_subscription.exists():
+            return True
+        user_subscription = movie_in_subscription.filter(users=user, movies=instance)
+        if not user_subscription.exists():
+            return 'Please register subscription for watching this movie'
+        user_subscription: MovieSubscription = movie_in_subscription.first()
+        if user_subscription.subscription_users.get(user=user,
+                                                    subscription=user_subscription).time_end < timezone.now():
+            return 'Your subscription ended, please subscribe again to watch this movie'
+        return True
 
 
 class MovieSubscriptionDetailSerializer(serializers.ModelSerializer):
