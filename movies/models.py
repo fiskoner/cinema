@@ -44,15 +44,15 @@ class MovieVideoFiles(models.Model):
 
     @property
     def video_360p_exists(self):
-        return not self.video_360p == None
+        return self.video_360p
 
     @property
     def video_480p_exists(self):
-        return not self.video_480p == None
+        return self.video_480p
 
     @property
     def video_720p_exists(self):
-        return not self.video_720p == None
+        return self.video_720p
 
 
 class UserMovieRating(models.Model):
