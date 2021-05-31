@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from rest_framework import permissions as rest_permissions
 from core import permissions, pagination
 from core.mixins import view_mixins
 from directory import serializers, models, filters
@@ -60,9 +61,23 @@ class MovieGenreViewSet(view_mixins.StaffEditPermissionViewSetMixin):
     permission_classes = (rest_framework.permissions.IsAuthenticated, rest_framework.permissions.IsAdminUser)
     pagination_class = pagination.CustomPagination
 
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return (rest_permissions.AllowAny(),)
+        if self.action in ['update', 'create']:
+            return (rest_permissions.IsAdminUser(),)
+        return (permission() for permission in self.permission_classes)
+
 
 class CountryViewSet(view_mixins.StaffEditPermissionViewSetMixin):
     queryset = models.Country.objects.all()
     serializer_class = serializers.CountrySerializer
     permission_classes = (rest_framework.permissions.IsAuthenticated, rest_framework.permissions.IsAdminUser)
     pagination_class = pagination.CustomPagination
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return (rest_permissions.AllowAny(),)
+        if self.action in ['update', 'create']:
+            return (rest_permissions.IsAdminUser(),)
+        return (permission() for permission in self.permission_classes)
