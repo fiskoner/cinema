@@ -97,9 +97,12 @@ class MovieSerializer(serializers.ModelSerializer):
         if not user_subscription.exists():
             return 'Please register subscription for watching this movie'
         user_subscription: MovieSubscription = movie_in_subscription.first()
-        if user_subscription.subscription_users.get(user=user,
-                                                    subscription=user_subscription).time_end < timezone.now():
-            return 'Your subscription ended, please subscribe again to watch this movie'
+        try:
+            if user_subscription.subscription_users.get(user=user,
+                                                        subscription=user_subscription).time_end < timezone.now():
+                return 'Your subscription ended, please subscribe again to watch this movie'
+        except models.MovieToUserSubscription.DoesNotExist:
+            return None
         return None
 
 
