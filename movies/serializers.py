@@ -96,7 +96,7 @@ class MovieSerializer(serializers.ModelSerializer):
         if user_subscription.subscription_users.get(user=user,
                                                     subscription=user_subscription).time_end < timezone.now():
             return 'Your subscription ended, please subscribe again to watch this movie'
-        return True
+        return None
 
 
 class MovieSubscriptionDetailSerializer(serializers.ModelSerializer):
