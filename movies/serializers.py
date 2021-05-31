@@ -93,7 +93,7 @@ class MovieSerializer(serializers.ModelSerializer):
         movie_in_subscription = MovieSubscription.objects.filter(movies=instance)
         if not movie_in_subscription.exists():
             return None
-        user_subscription  = movie_in_subscription.filter(users=user, movies=instance)
+        user_subscription = movie_in_subscription.filter(users=user, movies=instance)
         if not user_subscription.exists():
             return 'Please register subscription for watching this movie'
         user_subscription: MovieSubscription = movie_in_subscription.first()
