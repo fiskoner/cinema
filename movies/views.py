@@ -25,7 +25,7 @@ class MovieViewSet(ModelViewSet):
     filterset_class = filters.MovieFilter
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
+        if self.action in ['list', 'retrieve', 'stream_video']:
             return (rest_permissions.AllowAny(),)
         if self.action in ['update', 'create']:
             return (rest_permissions.IsAdminUser(),)
