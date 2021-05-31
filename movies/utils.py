@@ -25,8 +25,9 @@ def check_subscription(user, movie):
     if not user_subscription.exists():
         raise exceptions.ValidationError('Please register subscription for watching this movie')
     user_subscription: MovieSubscription = movie_in_subscription.first()
-    if user_subscription.subscription_users.get(user=user, subscription=user_subscription).time_end < timezone.now():
-        raise exceptions.ValidationError('Your subscription ended, please subscribe again to watch this movie')
+    for sub in user_subscription.subscription_users.filter(user=user, subscription=user_subscription):
+        if sub.time_end < timezone.now():
+            return 'Your subscription ended, please subscribe again to watch this movie'
     return True
 
 
